@@ -1,2 +1,8 @@
+accelerate
 dvc
+diffusers
+ftfy
 notebook
+torch
+transformers
+scipy
