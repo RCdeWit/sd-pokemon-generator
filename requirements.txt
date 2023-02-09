@@ -2,7 +2,9 @@ accelerate
 dvc
 diffusers
 ftfy
+matplotlib
 notebook
 torch
+tqdm
 transformers
 scipy
