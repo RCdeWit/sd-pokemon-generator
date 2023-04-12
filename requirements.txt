@@ -1,10 +1,16 @@
 accelerate
 dvc
-diffusers
+diffusers==0.14.0
 ftfy
+# git+https://github.com/cloneofsimo/lora.git
 matplotlib
 notebook
+pandas
+pillow
 torch
+torchvision
+torchaudio
 tqdm
 transformers
 scipy
+wandb

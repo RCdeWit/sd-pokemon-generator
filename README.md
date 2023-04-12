@@ -11,3 +11,11 @@
 https://huggingface.co/docs/diffusers/quicktour
 
 https://huggingface.co/docs/diffusers/optimization/mps
+
+
+## LoRA
+https://github.com/cloneofsimo/lora
+https://replicate.com/blog/lora-faster-fine-tuning-of-stable-diffusion
+https://aituts.com/stable-diffusion-lora/
+https://huggingface.co/blog/lora0
+https://old.reddit.com/r/StableDiffusion/comments/1171zhk/how_can_i_make_a_lora_model_on_my_m1_mac/jeraqeb/
