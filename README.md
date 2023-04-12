@@ -18,3 +18,4 @@
 - https://aituts.com/stable-diffusion-lora/
 - https://huggingface.co/blog/lora0
 - https://old.reddit.com/r/StableDiffusion/comments/1171zhk/how_can_i_make_a_lora_model_on_my_m1_mac/jeraqeb/
+- https://civitai.com/models/5115/pokemon-lora-ken-sugimori-style
