@@ -36,7 +36,7 @@ def generate_images(pipe, SEED, PROMPT, NEGATIVE_PROMPT, BATCH_SIZE, NUM_INFEREN
     
     return outputs
 
-def save_images(outputs, OUTPUT_DIRECTORY):
+def save_images(outputs, OUTPUT_DIRECTORY, batch_iteration):
     # Create directory and clear if it already exists
     if not os.path.exists(PROJECT_ROOT / OUTPUT_DIRECTORY):
         os.mkdir(PROJECT_ROOT / OUTPUT_DIRECTORY)
@@ -45,7 +45,7 @@ def save_images(outputs, OUTPUT_DIRECTORY):
         os.mkdir(PROJECT_ROOT / OUTPUT_DIRECTORY)
 
     for i, image in enumerate(outputs.images):      
-        image.save(f'{PROJECT_ROOT / OUTPUT_DIRECTORY}/{i}.png')
+        image.save(f'{PROJECT_ROOT / OUTPUT_DIRECTORY}/batch_iteration-{i}.png')
 
 
 if __name__ == '__main__':
@@ -65,10 +65,14 @@ if __name__ == '__main__':
     SEED: str = params['generate_text_to_image']['seed']
     NUM_INFERENCE_STEPS: int = params['generate_text_to_image']['num_inference_steps']
     BATCH_SIZE: int = params['generate_text_to_image']['batch_size']
+    BATCH_COUNT: int = params['generate_text_to_image']['batch_count']
     PROMPT: str = params['generate_text_to_image']['prompt']
     NEGATIVE_PROMPT: str = params['generate_text_to_image']['negative_prompt']
     OUTPUT_DIRECTORY: str = params['generate_text_to_image']['output_directory']
 
     pipe = set_up_pipeline(BASE_MODEL, LORA_PATH, USE_LORA)
-    outputs = generate_images(pipe, SEED, PROMPT, NEGATIVE_PROMPT, BATCH_SIZE, NUM_INFERENCE_STEPS)
-    save_images(outputs, OUTPUT_DIRECTORY)
+
+    for i in range(BATCH_COUNT):
+        outputs = generate_images(pipe, SEED, PROMPT, NEGATIVE_PROMPT, BATCH_SIZE, NUM_INFERENCE_STEPS)
+
+        save_images(outputs, OUTPUT_DIRECTORY, batch_iteration=i)
