@@ -54,7 +54,7 @@ stages:
       \ --pretrained_model_name_or_path=runwayml/stable-diffusion-v1-5 --instance_data_dir=data/processed/pokemon\
       \ --output_dir=models/pkmnlora --instance_prompt='a pkmnlora pokemon' --resolution=512\
       \ --train_batch_size=1 --gradient_accumulation_steps=1 --checkpointing_steps=100\
-      \ --learning_rate=0.0001 --lr_scheduler='constant' --lr_warmup_steps=0 --max_train_steps=10\
+      \ --learning_rate=0.0001 --lr_scheduler='constant' --lr_warmup_steps=0 --max_train_steps=500\
       \ --seed=0\n"
     deps:
     - path: data/processed/pokemon
@@ -67,21 +67,21 @@ stages:
       nfiles: 545
     outs:
     - path: models/pkmnlora
-      md5: 67ddeb2fbd003978f9371993d501400b.dir
-      size: 3288584
-      nfiles: 4
+      md5: ab32c2c36406607bdbb6e3b9577a0aae.dir
+      size: 69151821
+      nfiles: 24
   generate_text_to_image:
     cmd: python3 src/generate_text_to_image.py --params params.yaml
     deps:
     - path: models/pkmnlora
-      md5: 67ddeb2fbd003978f9371993d501400b.dir
-      size: 3288584
-      nfiles: 4
+      md5: ab32c2c36406607bdbb6e3b9577a0aae.dir
+      size: 69151821
+      nfiles: 24
     - path: src/generate_text_to_image.py
-      md5: 65278bab3eeecfefeb12b22a7f3b8c5a
-      size: 2800
+      md5: 6687364f6ee6fac81e274f3a0a9abf21
+      size: 2968
     outs:
     - path: outputs
-      md5: d10ee870299eda60446ba0ce02d7c5bb.dir
-      size: 459523
+      md5: 7a0abaab8f74118b968a71771e829349.dir
+      size: 390373
       nfiles: 1

@@ -45,7 +45,7 @@ def save_images(outputs, OUTPUT_DIRECTORY, batch_iteration):
         os.mkdir(PROJECT_ROOT / OUTPUT_DIRECTORY)
 
     for i, image in enumerate(outputs.images):      
-        image.save(f'{PROJECT_ROOT / OUTPUT_DIRECTORY}/batch_iteration-{i}.png')
+        image.save(f'{PROJECT_ROOT / OUTPUT_DIRECTORY}/{batch_iteration}-{i}.png')
 
 
 if __name__ == '__main__':
