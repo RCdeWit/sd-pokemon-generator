@@ -44,10 +44,7 @@ def save_images(outputs, OUTPUT_DIRECTORY):
         shutil.rmtree(PROJECT_ROOT / OUTPUT_DIRECTORY)
         os.mkdir(PROJECT_ROOT / OUTPUT_DIRECTORY)
 
-    for i, image in enumerate(outputs.images):
-        imgplot = plt.imshow(image)
-        plt.show(image)
-        
+    for i, image in enumerate(outputs.images):      
         image.save(f'{PROJECT_ROOT / OUTPUT_DIRECTORY}/{i}.png')
 
 
@@ -68,9 +65,9 @@ if __name__ == '__main__':
     SEED: str = params['generate_text_to_image']['seed']
     NUM_INFERENCE_STEPS: int = params['generate_text_to_image']['num_inference_steps']
     BATCH_SIZE: int = params['generate_text_to_image']['batch_size']
-    PROMPT: str = params['generate_text_to_image']['prompt]']
-    NEGATIVE_PROMPT: str = params['generate_text_to_image']['negative_prompt]']
-    OUTPUT_DIRECTORY: str = params['generate_text_to_image']['output_directory]']
+    PROMPT: str = params['generate_text_to_image']['prompt']
+    NEGATIVE_PROMPT: str = params['generate_text_to_image']['negative_prompt']
+    OUTPUT_DIRECTORY: str = params['generate_text_to_image']['output_directory']
 
     pipe = set_up_pipeline(BASE_MODEL, LORA_PATH, USE_LORA)
     outputs = generate_images(pipe, SEED, PROMPT, NEGATIVE_PROMPT, BATCH_SIZE, NUM_INFERENCE_STEPS)
