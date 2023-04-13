@@ -123,3 +123,10 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Kaggle credentials file
+kaggle.json
+
+# Diffusers repo that is cloned in pipeline
+diffusers/
+/outputs
