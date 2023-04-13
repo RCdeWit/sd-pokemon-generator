@@ -1,0 +1,87 @@
+schema: '2.0'
+stages:
+  set_up_diffusers:
+    cmd: "git clone --depth 1 --branch v0.14.0 https://github.com/huggingface/diffusers.git\
+      \ diffusers\npip3.10 install -r \"diffusers/examples/dreambooth/requirements.txt\"\
+      \naccelerate config default\n"
+    outs:
+    - path: diffusers
+      md5: 24d2dc4cd0e74c32b967fbc7fbc1c25f.dir
+      size: 5998474
+      nfiles: 545
+  scrape_pokemon_images:
+    cmd: python3 src/scrape_pokemon_images.py --params params.yaml
+    deps:
+    - path: src/scrape_pokemon_images.py
+      md5: 9b2c189c9af8b0cff17f9e5d28af2a52
+      size: 1266
+    params:
+      params.yaml:
+        base:
+          train_pokemon_type: all
+    outs:
+    - path: data/external/pokemon
+      md5: 6b41f549b3211b04a1597c81fc4be6c6.dir
+      size: 130512085
+      nfiles: 1008
+  download_pokemon_stats:
+    cmd: kaggle datasets download -d brdata/complete-pokemon-dataset-gen-iiv -f Pokedex_Cleaned.csv
+      -p data/external/
+    outs:
+    - path: data/external/Pokedex_Cleaned.csv
+      md5: eb037b3ce0411f8c0d47483918114b33
+      size: 58035
+  resize_pokemon_images:
+    cmd: python3 src/resize_pokemon_images.py --params params.yaml
+    deps:
+    - path: data/external/Pokedex_Cleaned.csv
+      md5: eb037b3ce0411f8c0d47483918114b33
+      size: 58035
+    - path: data/external/pokemon
+      md5: 6b41f549b3211b04a1597c81fc4be6c6.dir
+      size: 130512085
+      nfiles: 1008
+    - path: src/resize_pokemon_images.py
+      md5: 9c8c870ff9834b57b4153802d872174a
+      size: 2559
+    outs:
+    - path: data/processed/pokemon
+      md5: a26f62405388119e770a1f2e710c3535.dir
+      size: 146096519
+      nfiles: 1003
+  train_lora:
+    cmd: "accelerate launch --mps \"diffusers/examples/dreambooth/train_dreambooth_lora.py\"\
+      \ --pretrained_model_name_or_path=runwayml/stable-diffusion-v1-5 --instance_data_dir=data/processed/pokemon\
+      \ --output_dir=models/pkmnlora --instance_prompt='a pkmnlora pokemon' --resolution=512\
+      \ --train_batch_size=1 --gradient_accumulation_steps=1 --checkpointing_steps=100\
+      \ --learning_rate=0.0001 --lr_scheduler='constant' --lr_warmup_steps=0 --max_train_steps=10\
+      \ --seed=0\n"
+    deps:
+    - path: data/processed/pokemon
+      md5: a26f62405388119e770a1f2e710c3535.dir
+      size: 146096519
+      nfiles: 1003
+    - path: diffusers
+      md5: 24d2dc4cd0e74c32b967fbc7fbc1c25f.dir
+      size: 5998474
+      nfiles: 545
+    outs:
+    - path: models/pkmnlora
+      md5: 67ddeb2fbd003978f9371993d501400b.dir
+      size: 3288584
+      nfiles: 4
+  generate_text_to_image:
+    cmd: python3 src/generate_text_to_image.py --params params.yaml
+    deps:
+    - path: models/pkmnlora
+      md5: 67ddeb2fbd003978f9371993d501400b.dir
+      size: 3288584
+      nfiles: 4
+    - path: src/generate_text_to_image.py
+      md5: 65278bab3eeecfefeb12b22a7f3b8c5a
+      size: 2800
+    outs:
+    - path: outputs
+      md5: d10ee870299eda60446ba0ce02d7c5bb.dir
+      size: 459523
+      nfiles: 1
