@@ -27,6 +27,9 @@ stages:
     - data/external/Pokedex_Cleaned.csv
     outs:
     - data/processed/pokemon
+    params:
+    - base
+    - data_etl
   train_lora:
     cmd: >
       accelerate launch --mps "diffusers/examples/dreambooth/train_dreambooth_lora.py"
@@ -48,6 +51,9 @@ stages:
     - data/processed/pokemon
     outs:
     - models/pkmnlora
+    params:
+    - data_etl
+    - train_lora
   generate_text_to_image:
     cmd: python3 src/generate_text_to_image.py --params params.yaml
     outs:
@@ -55,3 +61,6 @@ stages:
     deps:
     - src/generate_text_to_image.py
     - models/pkmnlora
+    params:
+    - train_lora
+    - generate_text_to_image
