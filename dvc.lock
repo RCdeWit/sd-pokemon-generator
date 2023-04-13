@@ -78,10 +78,33 @@ stages:
       size: 69151821
       nfiles: 24
     - path: src/generate_text_to_image.py
-      md5: 6687364f6ee6fac81e274f3a0a9abf21
-      size: 2968
+      md5: 94c0a397b1801c0dca7932262aacc942
+      size: 2991
+    params:
+      params.yaml:
+        generate_text_to_image:
+          seed: 1024
+          num_inference_steps: 30
+          batch_size: 1
+          batch_count: 2
+          prompt: a (pkmnlora:1.5) (pokemon), drawn concept art, facing camera, (solid
+            white background:1.2)
+          negative_prompt: human, people, person, 3d, computer graphic, black and
+            white, (painting by bad-artist:0.9), watermark, text, error, blurry, jpeg
+            artifacts, cropped, worst quality, low quality, normal quality, jpeg artifacts,
+            signature, watermark, username, artist name, (worst quality, low quality:1.4),
+            bad anatomy
+          output_directory: outputs
+          use_lora: true
+        train_lora:
+          seed: 0
+          model_directory: models
+          base_model: runwayml/stable-diffusion-v1-5
+          lora_path: models/pkmnlora
+          learning_rate: 0.0001
+          max_train_steps: 500
     outs:
     - path: outputs
-      md5: 7a0abaab8f74118b968a71771e829349.dir
-      size: 390373
-      nfiles: 1
+      md5: 3788eb861ad7993e4180618359b41b1f.dir
+      size: 773452
+      nfiles: 2
