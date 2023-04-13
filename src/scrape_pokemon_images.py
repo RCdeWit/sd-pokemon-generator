@@ -7,7 +7,7 @@ import yaml
 
 from utils.find_project_root import find_project_root
 
-def scrape_images():
+def scrape_images(PROJECT_ROOT, EXTERNAL_DATA_PATH):
     # Create directory and clear if it already exists
     if not os.path.exists(PROJECT_ROOT / EXTERNAL_DATA_PATH / 'pokemon'):
         os.mkdir(PROJECT_ROOT / EXTERNAL_DATA_PATH / 'pokemon')
@@ -35,4 +35,4 @@ if __name__ == '__main__':
     PROJECT_ROOT = find_project_root()
     EXTERNAL_DATA_PATH: str = params['data_etl']['external_data_path']
 
-    scrape_images()
+    scrape_images(PROJECT_ROOT, EXTERNAL_DATA_PATH)
