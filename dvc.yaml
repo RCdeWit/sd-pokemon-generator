@@ -1,0 +1,64 @@
+stages:
+  set_up_diffusers:
+    cmd: |
+      git clone --depth 1 --branch v0.14.0 https://github.com/huggingface/diffusers.git diffusers
+      pip3.10 install -r "diffusers/examples/dreambooth/requirements.txt"
+      accelerate config default
+    outs:
+    - diffusers:
+        cache: false
+  scrape_pokemon_images:
+    cmd: python3 src/scrape_pokemon_images.py --params params.yaml
+    deps:
+    - src/scrape_pokemon_images.py
+    outs:
+    - data/external/pokemon
+    params:
+    - base
+  download_pokemon_stats:
+    cmd: kaggle datasets download -d brdata/complete-pokemon-dataset-gen-iiv -f Pokedex_Cleaned.csv -p data/external/
+    outs:
+    - data/external/Pokemon_Cleaned.csv
+  resize_pokemon_images:
+    cmd: python3 src/resize_training_images.py --params params.yaml
+    deps:
+    - src/resize_training_images.py
+    - data/external/pokemon
+    - data/external/Pokemon_Cleaned.csv
+    outs:
+    - data/processed/pokemon
+  train_lora:
+    cmd: |
+      accelerate launch --mps "diffusers/examples/dreambooth/train_dreambooth_lora.py" \
+      --pretrained_model_name_or_path=${train_lora.base_model}  \
+      --instance_data_dir=${data_etl.train_data_path} \
+      --output_dir=${train_lora.lora_path} \
+      --instance_prompt="a pkmnlora pokemon" \
+      --resolution=512 \
+      --train_batch_size=1 \
+      --gradient_accumulation_steps=1 \
+      --checkpointing_steps=100 \
+      --learning_rate=${train_lora.learning_rate} \
+      --lr_scheduler="constant" \
+      --lr_warmup_steps=0 \
+      --max_train_steps=${train_lora.max_train_steps} \
+      --validation_prompt="a pkmnlora pokemon with green eyes" \
+      --validation_epochs=50 \
+      --seed=${train_lora.seed}
+    deps:
+    - diffusers
+    - data/processed/pokemon
+    outs:
+    - models/pkmnlora
+    params:
+    - data_etl
+    - train_lora
+  generate_text_to_image:
+    cmd: python3 src/generate_images.py --params params.yaml
+    outs:
+    - outputs
+    deps:
+    - src/generate_images.py
+    - models/pkmnlora
+    params:
+    - generate_text_to_image
