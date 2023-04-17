@@ -9,16 +9,21 @@ from PIL import Image
 from utils.find_project_root import find_project_root
 
 def get_subset_of_relevant_pokemon(EXTERNAL_DATA_PATH, TARGET_POKEMON_TYPE):
+
+    TARGET_POKEMON_TYPE = TARGET_POKEMON_TYPE.lower()
+
     pokemon = pd.read_csv(PROJECT_ROOT / EXTERNAL_DATA_PATH / 'Pokedex_Cleaned.csv', encoding='latin-1', engine='python')
     pokemon = pokemon[["#", "Name", "Primary Type", "Secondary Type"]]
 
-    pokemon.head()
+    # Make columns lowercase
+    pokemon['Primary Type']= pokemon['Primary Type'].str.lower()
+    pokemon['Secondary Type']= pokemon['Primary Type'].str.lower()
 
-    if not TARGET_POKEMON_TYPE.lower() in ['all', 'none', '']:
-        subset_1 = pokemon.loc[pokemon['Primary Type'].lower() == TARGET_POKEMON_TYPE]
-        subset_2 = pokemon.loc[pokemon['Secondary Type'].lower() == TARGET_POKEMON_TYPE]
+    if not TARGET_POKEMON_TYPE in ['all', 'none', '']:
+        subset_1 = pokemon.loc[pokemon['Primary Type'] == TARGET_POKEMON_TYPE]
+        subset_2 = pokemon.loc[pokemon['Secondary Type'] == TARGET_POKEMON_TYPE]
         
-        subset = pd.concat([subset_1, subset_2]).sort_values('pokedex_number')
+        subset = pd.concat([subset_1, subset_2]).sort_values('#')
     else:
         subset = pokemon
     
