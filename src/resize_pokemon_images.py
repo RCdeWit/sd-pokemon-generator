@@ -12,14 +12,14 @@ def get_subset_of_relevant_pokemon(EXTERNAL_DATA_PATH, TARGET_POKEMON_TYPE):
 
     TARGET_POKEMON_TYPE = TARGET_POKEMON_TYPE.lower()
 
-    pokemon = pd.read_csv(PROJECT_ROOT / EXTERNAL_DATA_PATH / 'Pokedex_Cleaned.csv', encoding='latin-1', engine='python')
-    pokemon = pokemon[["#", "Name", "Primary Type", "Secondary Type"]]
-
-    # Make columns lowercase
-    pokemon['Primary Type']= pokemon['Primary Type'].str.lower()
-    pokemon['Secondary Type']= pokemon['Primary Type'].str.lower()
-
     if not TARGET_POKEMON_TYPE in ['all', 'none', '']:
+        pokemon = pd.read_csv(PROJECT_ROOT / EXTERNAL_DATA_PATH / 'Pokedex_Cleaned.csv', encoding='latin-1', engine='python')
+        pokemon = pokemon[["#", "Name", "Primary Type", "Secondary Type"]]
+
+        # Make columns lowercase
+        pokemon['Primary Type']= pokemon['Primary Type'].str.lower()
+        pokemon['Secondary Type']= pokemon['Primary Type'].str.lower()
+
         subset_1 = pokemon.loc[pokemon['Primary Type'] == TARGET_POKEMON_TYPE]
         subset_2 = pokemon.loc[pokemon['Secondary Type'] == TARGET_POKEMON_TYPE]
         
