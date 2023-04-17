@@ -44,6 +44,13 @@ stages:
     - path: src/resize_pokemon_images.py
       md5: 9c8c870ff9834b57b4153802d872174a
       size: 2559
+    params:
+      params.yaml:
+        base:
+          train_pokemon_type: all
+        data_etl:
+          external_data_path: data/external/
+          train_data_path: data/processed/pokemon
     outs:
     - path: data/processed/pokemon
       md5: a26f62405388119e770a1f2e710c3535.dir
@@ -65,16 +72,28 @@ stages:
       md5: 24d2dc4cd0e74c32b967fbc7fbc1c25f.dir
       size: 5998474
       nfiles: 545
+    params:
+      params.yaml:
+        data_etl:
+          external_data_path: data/external/
+          train_data_path: data/processed/pokemon
+        train_lora:
+          seed: 0
+          model_directory: models
+          base_model: runwayml/stable-diffusion-v1-5
+          lora_path: models/pkmnlora
+          learning_rate: 0.0001
+          max_train_steps: 500
     outs:
     - path: models/pkmnlora
-      md5: ab32c2c36406607bdbb6e3b9577a0aae.dir
+      md5: 84de19923f15e885b0701bcf0bbc2efa.dir
       size: 69151821
       nfiles: 24
   generate_text_to_image:
     cmd: python3 src/generate_text_to_image.py --params params.yaml
     deps:
     - path: models/pkmnlora
-      md5: ab32c2c36406607bdbb6e3b9577a0aae.dir
+      md5: 84de19923f15e885b0701bcf0bbc2efa.dir
       size: 69151821
       nfiles: 24
     - path: src/generate_text_to_image.py
@@ -83,7 +102,7 @@ stages:
     params:
       params.yaml:
         generate_text_to_image:
-          seed: 1024
+          seed: 4000
           num_inference_steps: 30
           batch_size: 1
           batch_count: 2
@@ -105,6 +124,6 @@ stages:
           max_train_steps: 500
     outs:
     - path: outputs
-      md5: 3788eb861ad7993e4180618359b41b1f.dir
-      size: 773452
+      md5: e5ee22e1acf96212bf098f907a5ce24a.dir
+      size: 789790
       nfiles: 2
