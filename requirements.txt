@@ -1,16 +1,12 @@
-accelerate
-dvc
+accelerate==0.16.0
+dvc==2.54.0
 diffusers==0.14.0
-ftfy
-# git+https://github.com/cloneofsimo/lora.git
-matplotlib
-notebook
-pandas
-pillow
-torch
-torchvision
-torchaudio
-tqdm
-transformers
-scipy
-wandb
+kaggle==1.5.13
+matplotlib==3.6.3
+notebook==6.5.2
+pandas==2.0.0
+pillow==9.4.0
+torch==2.0.0
+torchvision==0.15.1
+tqdm==4.64.1
+transformers==4.26.0

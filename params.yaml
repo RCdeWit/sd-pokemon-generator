@@ -1,0 +1,24 @@
+base:
+  train_pokemon_type: 'all'
+
+data_etl:
+  external_data_path: 'data/external/'
+  train_data_path: 'data/processed/pokemon'
+
+train_lora:
+  seed: 0
+  model_directory: 'models'
+  base_model: 'runwayml/stable-diffusion-v1-5'
+  lora_path: 'models/pkmnlora'
+  learning_rate: 1e-4
+  max_train_steps: 500
+
+generate_text_to_image:
+  seed: 1024
+  num_inference_steps: 30
+  batch_size: 1
+  batch_count: 2
+  prompt: 'a (pkmnlora:1.5) (pokemon), drawn concept art, facing camera, (solid white background:1.2)'
+  negative_prompt: 'human, people, person, 3d, computer graphic, black and white, (painting by bad-artist:0.9), watermark, text, error, blurry, jpeg artifacts, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, artist name, (worst quality, low quality:1.4), bad anatomy'
+  output_directory: 'outputs'
+  use_lora: True
