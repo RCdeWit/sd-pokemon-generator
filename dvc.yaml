@@ -13,8 +13,6 @@ stages:
     - src/scrape_pokemon_images.py
     outs:
     - data/external/pokemon
-    params:
-    - base
   download_pokemon_stats:
     cmd: kaggle datasets download -d brdata/complete-pokemon-dataset-gen-iiv -f Pokedex_Cleaned.csv -p data/external/
     outs:
@@ -40,9 +38,9 @@ stages:
       --resolution=512
       --train_batch_size=1
       --gradient_accumulation_steps=1
-      --checkpointing_steps=100
+      --checkpointing_steps=500
       --learning_rate=${train_lora.learning_rate}
-      --lr_scheduler='constant'
+      --lr_scheduler='cosine'
       --lr_warmup_steps=0
       --max_train_steps=${train_lora.max_train_steps}
       --seed=${train_lora.seed}

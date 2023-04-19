@@ -15,10 +15,6 @@ stages:
     - path: src/scrape_pokemon_images.py
       md5: 9b2c189c9af8b0cff17f9e5d28af2a52
       size: 1266
-    params:
-      params.yaml:
-        base:
-          train_pokemon_type: all
     outs:
     - path: data/external/pokemon
       md5: 6b41f549b3211b04a1597c81fc4be6c6.dir
@@ -42,8 +38,8 @@ stages:
       size: 130512085
       nfiles: 1008
     - path: src/resize_pokemon_images.py
-      md5: 9c8c870ff9834b57b4153802d872174a
-      size: 2559
+      md5: 506d0d3c5d554c2eba0597730cb1dd4c
+      size: 2732
     params:
       params.yaml:
         base:
@@ -60,9 +56,9 @@ stages:
     cmd: "accelerate launch --mps \"diffusers/examples/dreambooth/train_dreambooth_lora.py\"\
       \ --pretrained_model_name_or_path=runwayml/stable-diffusion-v1-5 --instance_data_dir=data/processed/pokemon\
       \ --output_dir=models/pkmnlora --instance_prompt='a pkmnlora pokemon' --resolution=512\
-      \ --train_batch_size=1 --gradient_accumulation_steps=1 --checkpointing_steps=100\
-      \ --learning_rate=0.0001 --lr_scheduler='constant' --lr_warmup_steps=0 --max_train_steps=500\
-      \ --seed=0\n"
+      \ --train_batch_size=1 --gradient_accumulation_steps=1 --checkpointing_steps=500\
+      \ --learning_rate=0.0001 --lr_scheduler='cosine' --lr_warmup_steps=0 --max_train_steps=15000\
+      \ --seed=1337\n"
     deps:
     - path: data/processed/pokemon
       md5: a26f62405388119e770a1f2e710c3535.dir
@@ -78,52 +74,47 @@ stages:
           external_data_path: data/external/
           train_data_path: data/processed/pokemon
         train_lora:
-          seed: 0
+          seed: 1337
           model_directory: models
           base_model: runwayml/stable-diffusion-v1-5
           lora_path: models/pkmnlora
           learning_rate: 0.0001
-          max_train_steps: 500
+          max_train_steps: 15000
     outs:
     - path: models/pkmnlora
-      md5: 84de19923f15e885b0701bcf0bbc2efa.dir
-      size: 69151821
-      nfiles: 24
+      md5: 525eec90862c7e30388dedf08b58cb1f.dir
+      size: 398219967
+      nfiles: 121
   generate_text_to_image:
     cmd: python3 src/generate_text_to_image.py --params params.yaml
     deps:
     - path: models/pkmnlora
-      md5: 84de19923f15e885b0701bcf0bbc2efa.dir
-      size: 69151821
-      nfiles: 24
+      md5: 525eec90862c7e30388dedf08b58cb1f.dir
+      size: 398219967
+      nfiles: 121
     - path: src/generate_text_to_image.py
       md5: 94c0a397b1801c0dca7932262aacc942
       size: 2991
     params:
       params.yaml:
         generate_text_to_image:
-          seed: 4000
-          num_inference_steps: 30
+          seed: 3000
+          num_inference_steps: 35
           batch_size: 1
-          batch_count: 2
-          prompt: a (pkmnlora:1.5) (pokemon), drawn concept art, facing camera, (solid
-            white background:1.2)
-          negative_prompt: human, people, person, 3d, computer graphic, black and
-            white, (painting by bad-artist:0.9), watermark, text, error, blurry, jpeg
-            artifacts, cropped, worst quality, low quality, normal quality, jpeg artifacts,
-            signature, watermark, username, artist name, (worst quality, low quality:1.4),
-            bad anatomy
+          batch_count: 20
+          prompt: a pkmnlora pokemon
+          negative_prompt: ''
           output_directory: outputs
           use_lora: true
         train_lora:
-          seed: 0
+          seed: 1337
           model_directory: models
           base_model: runwayml/stable-diffusion-v1-5
           lora_path: models/pkmnlora
           learning_rate: 0.0001
-          max_train_steps: 500
+          max_train_steps: 15000
     outs:
     - path: outputs
-      md5: e5ee22e1acf96212bf098f907a5ce24a.dir
-      size: 789790
-      nfiles: 2
+      md5: b4329d7a9a6048897bf163871f462a99.dir
+      size: 6196820
+      nfiles: 20
